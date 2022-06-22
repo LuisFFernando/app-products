@@ -1,0 +1,31 @@
+version: '3.1'
+
+services:
+
+  app:
+    build: 
+      context: ../
+      dockerfile: docker/Dockerfile
+    image: python
+    container_name: app-product
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+    env_file:
+      - ../.env
+    ports:
+      - "8001:8001"
+    command: /app_start
+
+  postgres:
+    image: 'postgres:latest'
+    container_name: product_db
+    restart: always    
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5433:5433'
+    volumes:
+      - ./data01:/use/share/postgres/data
+      
