@@ -5,6 +5,7 @@ pydantic==1.8.2
 uvicorn==0.15.0
 sentry-sdk==0.19.5
 python-multipart==0.0.5
+boto3==1.24.14
 
 # ORM
 SQLAlchemy==1.4.19
