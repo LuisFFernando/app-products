@@ -2,10 +2,12 @@
 from app.api.serializers.product_serializers import ProductDeserializer
 from app.commons.service_interface import InterfaceService
 from app.respository.persistence_repository import OrmRepository
-
+# models
 from app.core import models
-
+# validate user is admin
 from app.commons.middleware import ValidateRoleUser
+#loggin
+import logging
 
 
 class ProductService(InterfaceService):
@@ -19,6 +21,7 @@ class ProductService(InterfaceService):
 
         try:
 
+            logging.INFO("create user...")
             # validate user is admin
             ValidateRoleUser.is_admin(self.kwargs.get("user_id"))
 
@@ -28,6 +31,7 @@ class ProductService(InterfaceService):
             return ProductDeserializer.from_orm(instance_product).dict()
 
         except Exception as e:
+            logging.error("Error create user")
 
             raise Exception(e)
 
