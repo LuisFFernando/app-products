@@ -79,8 +79,8 @@ class OrmRepository(InterfaceCrud):
         except IntegrityError as error:
 
             session.rollback()
-            capture_exception(IntegrityError.__message)
-            raise Exception(str(error._message))
+            capture_exception(error)
+            raise Exception(str(error))
 
         except Exception as e:
             session.rollback()

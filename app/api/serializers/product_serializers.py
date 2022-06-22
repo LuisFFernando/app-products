@@ -47,6 +47,7 @@ class ProductDeserializer(BaseModel):
     extra_data: str
     category_id: int
     category_name: str
+    history_query: int
 
     user_id: int
     active: bool
