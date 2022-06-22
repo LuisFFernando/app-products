@@ -1,3 +1,4 @@
+from email.policy import default
 from unicodedata import category
 from uuid import uuid4
 from sqlalchemy import JSON, Column, Float, Integer
@@ -91,12 +92,13 @@ class Product(BaseModel):
     id = Column(Integer, primary_key=True)
     name = Column(Text)
     quantity = Column(Integer, default=0)
-    sku = Column(Text, default=0)
-    brand = Column(Text, default=0)
+    sku = Column(Text, nullable=False)
+    brand = Column(Text, nullable=False)
     initial_value = Column(Float, default=0)
     description = Column(Text, default=None)
     profit_percentage = Column(Text, default=None)
     extra_data = Column(Text, nullable=False)
+    history_query = Column(Integer, default=0)
 
     user_id = Column(ForeignKey("user.id"))
     category_id = Column(ForeignKey("category_product.id"))
@@ -117,7 +119,6 @@ class CategoryProduct(BaseModel):
     id = Column(Integer, primary_key=True)
     name = Column(Text)
     description = Column(Text, default=None)
-
 
     category = relationship('Product', backref='category', order_by="Product.id")
 

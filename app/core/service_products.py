@@ -2,10 +2,12 @@
 from app.api.serializers.product_serializers import ProductDeserializer
 from app.commons.service_interface import InterfaceService
 from app.respository.persistence_repository import OrmRepository
-
+# models
 from app.core import models
-
+# validate user is admin
 from app.commons.middleware import ValidateRoleUser
+#loggin
+import logging
 
 
 class ProductService(InterfaceService):
@@ -19,6 +21,7 @@ class ProductService(InterfaceService):
 
         try:
 
+            logging.INFO("create user...")
             # validate user is admin
             ValidateRoleUser.is_admin(self.kwargs.get("user_id"))
 
@@ -28,6 +31,7 @@ class ProductService(InterfaceService):
             return ProductDeserializer.from_orm(instance_product).dict()
 
         except Exception as e:
+            logging.error("Error create user")
 
             raise Exception(e)
 
@@ -47,10 +51,14 @@ class ProductService(InterfaceService):
 
         _instance = OrmRepository(models.Product).filter(self.kwargs, page, item_per_page)
 
-        response = _instance[0]
         data = [ProductDeserializer.from_orm(data).dict() for data in _instance[1]]
 
-        return response, data
+        # update history query products
+        if self.kwargs.get("id"):
+            new_query = data[0].get("history_query") + 1
+            OrmRepository(models.Product).update({"id": self.kwargs.get("id")}, {"history_query": new_query})
+
+        return _instance[0], data
 
     def update(self, params: dict):
         """."""
@@ -62,7 +70,6 @@ class ProductService(InterfaceService):
         OrmRepository(models.Product).update(params, self.kwargs)
 
         # notify changes
-        
 
         return
 
